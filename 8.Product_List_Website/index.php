@@ -50,7 +50,7 @@ function createProductHandler()
     $json = json_encode($products);
     file_put_contents('./products.json', $json);
 
-    header("Location: /php-crash/8.Product_List_Website/products/");
+    header("Location: /php-crash/8.Product_List_Website/products");
 
 }
 
