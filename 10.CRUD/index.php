@@ -11,7 +11,8 @@ $routes = [
     ],
     "POST" => [
         "/php-crash/10.CRUD/products" => "createProductHandler",
-        "/php-crash/10.CRUD/delete-product" => "deleteProductHandler"
+        "/php-crash/10.CRUD/delete-product" => "deleteProductHandler",
+        "/php-crash/10.CRUD/update-product" => "updateProductHandler"
     ]
 ];
 
@@ -20,6 +21,26 @@ $handlerFunction = $routes[$method][$path] ?? "notFoundHandler";
 $safeHandlerFunction = function_exists($handlerFunction) ? $handlerFunction : "notFounctHandler";
 
 $safeHandlerFunction();
+
+
+
+function updateProductHandler()
+{
+    $updatedProductId = $_GET["id"] ?? "";
+    $products = json_decode(file_get_contents("./products.json"), true);
+    $index =  array_search($updatedProductId, array_column($products, 'id'));
+    $newProduct = [
+        "id" => $updatedProductId,
+        "name" => $_POST["name"],
+        "price" => $_POST["price"]
+    ];
+
+    $products[$index] =  $newProduct;
+
+    file_put_contents("./products.json", json_encode($products));
+    header("Location: /php-crash/10.CRUD/products");
+}
+
 
 
 
@@ -78,7 +99,8 @@ function productListHandler()
 
     $productListTemplate = compileTemplate("./views/product-list.php", [
         "products" => $products,
-        "activeLink" => "/php-crash/10.CRUD/"
+        "activeLink" => "/php-crash/10.CRUD/",
+        "editedProductId" => $_GET["edit"] ?? ""
     ]);
 
     echo compileTemplate('./views/wrapper.php', [
@@ -111,5 +133,5 @@ function createProductHandler()
 
 function notFoundHandler()
 {
-    echo "Oldal nem található";
+    echo "Az oldal nem található!";
 }
