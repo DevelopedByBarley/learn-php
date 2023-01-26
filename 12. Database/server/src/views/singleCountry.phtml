@@ -1,0 +1,15 @@
+<h1 class="text-center p-3">
+    <?= $params['country']['name'] ?>
+</h1>
+
+<h2 class="p-2">
+    Városok:
+</h2>
+
+<div class="btn-group-sm m-2">
+    <?php foreach ($params['cities'] as $city) : ?>
+        <a href="" class="btn btn-outline-info m-1">
+            <?= $city['name'] ?>
+        </a>
+    <?php endforeach; ?>
+</div>
