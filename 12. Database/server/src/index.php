@@ -14,7 +14,8 @@ $path = $parsed["path"];
 $routes = [
   "GET" => [
     "/php-crash/12.%20Database/server/" => "countryListHandler",
-    "/php-crash/12.%20Database/server/check-country" => "singleCountryHandler"
+    "/php-crash/12.%20Database/server/check-country" => "singleCountryHandler",
+    "/php-crash/12.%20Database/server/single-city" => "singleCityHandler"
   ],
   "POST" => [],
 ];
@@ -55,20 +56,61 @@ function singleCountryHandler()
 {
   $countryId = $_GET['id'] ?? "";
   $pdo = getConnection();
+
+  // ------ Összes ország lekérdezése érkező ID alapján
   $statement = $pdo->prepare("SELECT * FROM `countries` WHERE id = ?");
   $statement->execute([$countryId]);
   $country = $statement->fetch(PDO::FETCH_ASSOC);
+
+
+
+
+  // ------ Összes város lekérdezése érkező countryID alapján
 
   $statement =  $statement = $pdo->prepare("SELECT * FROM `cities` WHERE countryId = ?");
   $statement->execute([$countryId]);
   $cities = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+  // ---- Összes ország és  nyelv lekérdezése OrszágId alapján Languanges tábla összekapcsolásával országok nyelvid és  nyelvek id segitségével
+
+
+  $statement =  $statement = $pdo->prepare("SELECT * FROM `countrylanguages`
+  JOIN languages ON languageId = languages.id
+  WHERE countryId = ?");
+  $statement->execute([$countryId]);
+  $languanges = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+
+
   echo compileTemplate('wrapper.phtml', [
     'content' => compileTemplate('singleCountry.phtml', [
       "country" => $country,
-      "cities" => $cities
+      "cities" => $cities,
+      "languages" => $languanges
     ])
   ]);
+}
+
+
+function singleCityHandler()
+{
+  $singleCityId = $_GET["id"] ?? "";
+
+  $pdo = getConnection();
+  $statement =  $statement = $pdo->prepare("SELECT * FROM `cities` WHERE id = ?");
+  $statement->execute([$singleCityId]);
+  $city = $statement->fetch(PDO::FETCH_ASSOC);
+
+ 
+
+  echo compileTemplate("wrapper.phtml", [
+    "content" => compileTemplate("singleCity.phtml", [
+      "city" => $city
+    ]),
+  ]);
+
 }
 
 

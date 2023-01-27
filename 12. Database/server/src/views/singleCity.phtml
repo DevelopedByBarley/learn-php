@@ -1,0 +1,14 @@
+<div class="city">
+  <h1 class="city-name text-center mt-5 mb-5"><?= $params["city"]["name"] ?></h1>
+  <ul class="list-group">
+    <li class="list-group-item <?= $params["city"]["isCapital"] === 1  ? "text-success" : "text-danger" ?>">
+      <h5><?= $params["city"]["isCapital"] === 1  ? "Főváros" : "Nem főváros" ?></h5>
+    </li>
+    <li class="list-group-item">
+      <h6>1. <?= $params["city"]["district"] !== "-"  ? "Kerületekkel rendelkező" : "Nincs kerület" ?></h6>
+    </li>
+    <li class="list-group-item">
+      <h6>2. Populáció: <span class="text-info"><?= $params["city"]["population"] ?></span> Fő</h6>
+    </li>
+  </ul>
+</div>
