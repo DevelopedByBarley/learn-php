@@ -14,9 +14,11 @@
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="/learn-php/13Authentication/server/">Országok</a>
 
-        <form action="/learn-php/13Authentication/server/logout" method="POST">
-            <button class="btn btn-outline-danger" type="submit">Logout</button>
-        </form>
+        <?php if ( $params["isAuthorized"]): ?>
+            <form action="/learn-php/13Authentication/server/logout" method="POST">
+                <button class="btn btn-outline-danger" type="submit">Logout</button>
+            </form>
+        <?php endif; ?>
 
     </nav>
     <?= $params['content'] ?>

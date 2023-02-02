@@ -49,7 +49,6 @@ function registerHandler()
 }
 
 
-
 function loginHandler()
 {
     //SELECT * FROM `users` WHERE users . email = "asd@asd.com";
@@ -82,7 +81,6 @@ function loginHandler()
 }
 
 
-
 function logoutHandler()
 {
     session_start(); // Hivjuk meg a sessiont
@@ -100,12 +98,8 @@ function logoutHandler()
     //var_dump($cookieParams);
     // Igy már a $cookiParams-ból kiszedhetjük a paramétereket amikre szükségünk van!
     setcookie(session_name(), "", 0, $cookieParams["path"], $cookieParams["domain"], $cookieParams["secure"], isset($cookieParams["httponly"]));
-    exit;
     header("Location: /learn-php/13Authentication/server/");
 }
-
-
-
 
 
 /**
@@ -153,7 +147,7 @@ function singleCountryHandler()
 
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
-            'content' => compileTemplate("subscriptionForm.phtml", [])
+            'content' => compileTemplate("subscriptionForm.phtml", []),
         ]);
         return;
     }
@@ -182,7 +176,8 @@ function singleCountryHandler()
             'country' => $country,
             'cities' => $cities,
             'languages' => $languages,
-        ])
+        ]),
+        'isAuthorized' => true 
     ]);
 }
 
@@ -191,7 +186,8 @@ function countryListHandler()
 
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
-            'content' => compileTemplate("subscriptionForm.phtml", [])
+            'content' => compileTemplate("subscriptionForm.phtml", []),
+            'isAuthorized' => isLoggedIn(),
         ]);
         return;
     }
@@ -205,7 +201,8 @@ function countryListHandler()
     echo compileTemplate('wrapper.phtml', [
         'content' => compileTemplate('countryList.phtml', [
             'countries' => $countries
-        ])
+        ]),
+        'isAuthorized' => true
     ]);
 }
 
@@ -229,7 +226,8 @@ function singleCityHandler()
     echo compileTemplate("wrapper.phtml", [
         "content" => compileTemplate("citySingle.phtml", [
             "cities" => $cities
-        ])
+        ]),
+        'isAuthorized' => true
     ]);
 }
 
