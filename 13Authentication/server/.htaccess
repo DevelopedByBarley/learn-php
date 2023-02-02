@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Környezeti változók beállítása
+  SetEnv DB_HOST localhost
+  SetEnv DB_NAME test
+  SetEnv DB_USER Barley
+  SetEnv DB_PASSWORD Csak1enter
+
+  # Ha a public mappában lévő fájlra érkezett a kérés, szolgáld ki a fájlt
+  RewriteCond %{REQUEST_URI} ^.*public/(.*)
+  RewriteRule ^(.*)$ src/public/%1 [END]
+
+  # Minden más esetben az index.php-t futtasd le
+  RewriteRule (.*)  src/index.php [QSA]
+</IfModule>

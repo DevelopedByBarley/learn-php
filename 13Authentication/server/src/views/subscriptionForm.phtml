@@ -1,0 +1,25 @@
+<div class="card p-3 m-2">
+    <div class="jumbotron text-center">
+        <h2>A tartalom megtekintéséhez bejelentkezés szükséges!</h2>
+    </div>
+</div>
+
+<form class="m-5" action="/learn-php/13Authentication/server/register" method="POST">
+    <label class="w-100">
+        <input class="form-control" type="email" name="email" />
+    </label>
+    <label class="w-100">
+        <input class="form-control" type="password" name="password" />
+    </label>
+    <button class="btn btn-success" type="submit">Register</button>
+</form>
+
+<form action="/learn-php/13Authentication/server/login" method="POST">
+    <label class="w-100">
+        <input class="form-control" type="email" name="email" />
+    </label>
+    <label class="w-100">
+        <input class="form-control" type="password" name="password" />
+    </label>
+    <button class="btn btn-primary" type="submit">Login</button>
+</form>

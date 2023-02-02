@@ -1,0 +1,19 @@
+<div class="cities">
+    <?php foreach ($params["cities"] as $city) : ?>
+        <h1 class="text-center mt-5 mb-5"><?= $city["name"] ?></h1>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h3>District:</h3>
+                <h6><?= $city["district"] ?></h6>
+            </li>
+            <li class="list-group-item">
+                <h3>Population:</h3>
+                <h6><?= $city["population"] ?></h6>
+            </li>
+            <li class="list-group-item">
+                <h3>District:</h3>
+                <h6 class="<?php echo $city["isCapital"] ? "text-danger" : "text-success" ?>"><?= $city["isCapital"] ?></h6>
+            </li>
+        </ul>
+    <?php endforeach ?>
+</div>
