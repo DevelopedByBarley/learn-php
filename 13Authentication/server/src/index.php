@@ -173,7 +173,9 @@ function singleCountryHandler()
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
             'content' => compileTemplate("subscriptionForm.phtml", [
-                'info' => $_GET["info"] ?? ""
+                'info' => $_GET["info"] ?? "",
+                'isRegistration' => isset($_GET['isRegistration']),
+                'url' => getPathWithId($_SERVER["REQUEST_URI"])
             ]),
 
         ]);
@@ -215,7 +217,9 @@ function countryListHandler()
 
         echo compileTemplate("wrapper.phtml", [
             'content' => compileTemplate("subscriptionForm.phtml", [
-                'info' => $_GET["info"] ?? ""
+                'info' => $_GET["info"] ?? "",
+                'isRegistration' => isset($_GET['isRegistration']),
+                'url' => getPathWithId($_SERVER["REQUEST_URI"])
             ]),
             'isAuthorized' => isLoggedIn(),
         ]);
@@ -245,7 +249,9 @@ function singleCityHandler()
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
             'content' => compileTemplate("subscriptionForm.phtml", [
-                'info' => $_GET["info"] ?? ""
+                'info' => $_GET["info"] ?? "",
+                'isRegistration' => isset($_GET['isRegistration']),
+                'url' => getPathWithId($_SERVER["REQUEST_URI"])
             ])
         ]);
         return;
