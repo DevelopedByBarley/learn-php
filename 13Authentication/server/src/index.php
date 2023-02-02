@@ -1,7 +1,5 @@
 <?php
 
-// útvonalválasztó
-// https://kodbazis.hu/php-az-alapoktol/termek-listazo-website
 
 $method = $_SERVER["REQUEST_METHOD"];
 $parsed = parse_url($_SERVER['REQUEST_URI']);
@@ -35,9 +33,28 @@ $handlerFunction();
 function registerHandler()
 {
     //INSERT INTO `users` (`id`, `email`, `password`, `createdAt`) VALUES (NULL, 'asd@asd.com', 'asd1234', '1111111');
-
+    
 
     $pdo = getConnection();
+
+    
+
+    $statement = $pdo->prepare("SELECT * FROM `users` WHERE users . email = ?");
+    $statement->execute([$_POST["email"]]);
+    $isUserExist = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($isUserExist) {
+        echo "User is actually exist";
+        header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]) . "&isRegistration=1&info=userExist");
+        return;        
+    } 
+    
+    if($_POST["email"] || $_POST["password"] === ""){
+        echo "User is actually exist";
+        header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]) . "&isRegistration=1&info=invalidInputValues");
+        return;  
+    }
+
     $statement = $pdo->prepare("INSERT INTO `users` (`id`, `email`, `password`, `createdAt`) VALUES (NULL, ?, ?, ?)");
     $statement->execute([
         $_POST["email"],

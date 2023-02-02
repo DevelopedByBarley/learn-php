@@ -13,9 +13,25 @@
     <form action="/learn-php/13Authentication/server/register" method="POST">
         <?php if ($params["info"] === "registrationSuccesfull") : ?>
             <div class="alert alert-success" role="alert">
-                Registration succesfull!
+                Registration successfull!
             </div>
-        <?php endif ?>
+
+
+
+            <?php if ($params["info"] === "userExist") : ?>
+                <div class="alert alert-danger" role="alert">
+                    Registration error! User alredy exist
+                </div>
+            <?php endif ?>
+            <?php elseif ($params["info"] === "invalidInputValues") : ?>
+                <div class="alert alert-danger" role="alert">
+                    Invalid input field values!
+                </div>
+            <?php endif ?>
+
+
+
+
         <label class="w-100">
             <input class="form-control" type="email" name="email" />
         </label>
