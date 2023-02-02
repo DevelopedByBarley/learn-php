@@ -45,7 +45,7 @@ function registerHandler()
         time() // -> Unix időbélyeg
     ]);
 
-    header("Location: /learn-php/13Authentication/server/");
+    header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]) . "&info=registrationSuccesfull");
 }
 
 
@@ -61,7 +61,7 @@ function loginHandler()
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        echo "Email or password doesn't exist!";
+        header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]) . "&info=invalidCredentials");
         return;
     }
 
@@ -69,7 +69,7 @@ function loginHandler()
     $isVerified = password_verify($_POST["password"], $user["password"]);
 
     if (!$isVerified) {
-        echo "Email or password doesn't exist!";
+        header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]) . "&info=invalidCredentials");
         return;
     }
 
@@ -77,12 +77,36 @@ function loginHandler()
     $_SESSION['userId'] = $user["id"]; // A $_SESSION egy üres asszociativ tömbként kezdi pályafutását , és bármennyi kulcsérték párt hozzáfűzhetünk.
     // De csak akkor , ha a session el van inditva
 
-    header("Location: /learn-php/13Authentication/server/");
+
+
+    // Azt szeretnénk ha a visszajelentkezés után arra az oldalra dobna vissza, ahonnan kiindultunk!
+    // EHHEZ A $_SERVER["HTTP_REFERERT"] HASZNÁLJUK , AMI ÖNMAGÁBAN AZÉRT NEM ELÉG, MERT HA A USER TÖBB QUERY-T DOB AZ URL-BE AKKOR AZOKAT IS BELE VESZI
+    // EZÉRT KELL AZ, HOGY SZÉTSZEDJÜK AZ URLT- ERRE EGY DEDIKÁLT getPathWithId($url) FUNCTION HOZUNK LÉTRE
+    header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]));
+}
+
+
+
+function getPathWithId($url): string
+{
+    $parsed = parse_url($url); // MEGKAPJUK AZ URLT-T AMIT PARSE-OLUNK
+    if (!isset($parsed["query"])) { // A PARSEOLT URL-BŐL KI KÉRJÜK A QUERY-T AMI HA NEM LÉTEZIK EARLY-RETURN
+        return $url . "?id=";
+    }
+
+    $queryParams = []; // SZÉT AKARJUK SZEDNI A QUERYT , ASSZOCIATIV TÖMBÖKRE EZÉRT LÉTRE HOZUNK NEKI EGY ÜRES TÖMBÖT
+    parse_str($parsed['query'], $queryParams); // AMIBE A parse_str(parseolni kivánt string, kimeneti változó) függvényt meghivjuk
+
+    return $parsed["path"] . "?id=" . $queryParams["id"]; // MAJD A VISSZATÉRÉSI STRINGET A LOCATION HEADERNEK MEGFELELŐEN ÖSSZEKONKATENÁLJUK!
+
+    // ----> !!!!! EZT A FÜGGVÉNYT BÁRMELYIK LOCATION HEADER ÁTIRÁNYITÁSNÁL HASZNÁLHATJUK ÉS KONKATENÁLHATUNK HOZZÁ BÁRMIT
 }
 
 
 function logoutHandler()
 {
+
+
     session_start(); // Hivjuk meg a sessiont
     session_destroy(); // MAJD Destroyoljuk
     // Ettől a böngészőből nem fog eltünni a session id, ahhoz egy süti fejlécet is meg kell küldeni minek segitségével a lejárati dátumát vissza állítjuk a múltba! Emiatt kitörli a böngésző automatikusan a sütit;
@@ -98,12 +122,21 @@ function logoutHandler()
     //var_dump($cookieParams);
     // Igy már a $cookiParams-ból kiszedhetjük a paramétereket amikre szükségünk van!
     setcookie(session_name(), "", 0, $cookieParams["path"], $cookieParams["domain"], $cookieParams["secure"], isset($cookieParams["httponly"]));
-    header("Location: /learn-php/13Authentication/server/");
+    header("Location:" . getPathWithId($_SERVER["HTTP_REFERER"]));
 }
 
 
-/**
-  function ic
+function isLoggedIn()
+{
+    if (!isset($_COOKIE[session_name()])) return false;
+    session_start();
+    if (!isset($_SESSION["userId"])) return false;
+    return true;
+
+
+
+    /**
+  function isLoggedIn()
    {
     if (!$_COOKIE[session_name()]) { // A SESSION NAME SEGÍTSÉGÉVEL MINDIG DINAMIKUSAN A MEGFELELEŐ NÉV KERÜL A KEZEDBE HA ESETLEG A SESSIONT EGYEDI NÉVEN INDÍTANÁD!
         // Kideritjük hogy szerver oldalon ez egy ténylegesen létező munkamenet vagy sem;
@@ -118,16 +151,8 @@ function logoutHandler()
     exit;
     // MIVEL KI AKARJUK SZERVEZNI EZÉRT NEGÁLUNK!
 }
- * 
- */
-
-
-function isLoggedIn()
-{
-    if (!isset($_COOKIE[session_name()])) return false;
-    session_start();
-    if (!isset($_SESSION["userId"])) return false;
-    return true;
+     * 
+     */
 }
 
 
@@ -147,11 +172,13 @@ function singleCountryHandler()
 
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
-            'content' => compileTemplate("subscriptionForm.phtml", []),
+            'content' => compileTemplate("subscriptionForm.phtml", [
+                'info' => $_GET["info"] ?? ""
+            ]),
+
         ]);
         return;
     }
-
 
     $countryId = $_GET['id'] ?? '';
     $pdo = getConnection();
@@ -177,7 +204,7 @@ function singleCountryHandler()
             'cities' => $cities,
             'languages' => $languages,
         ]),
-        'isAuthorized' => true 
+        'isAuthorized' => true
     ]);
 }
 
@@ -185,10 +212,16 @@ function countryListHandler()
 {
 
     if (!isLoggedIn()) {
+
         echo compileTemplate("wrapper.phtml", [
-            'content' => compileTemplate("subscriptionForm.phtml", []),
+            'content' => compileTemplate("subscriptionForm.phtml", [
+                'info' => $_GET["info"] ?? ""
+            ]),
             'isAuthorized' => isLoggedIn(),
         ]);
+
+
+        //'invalidCredentials' => isset($_GET["invalidCredentials"])
         return;
     }
 
@@ -211,7 +244,9 @@ function singleCityHandler()
 
     if (!isLoggedIn()) {
         echo compileTemplate("wrapper.phtml", [
-            'content' => compileTemplate("subscriptionForm.phtml", [])
+            'content' => compileTemplate("subscriptionForm.phtml", [
+                'info' => $_GET["info"] ?? ""
+            ])
         ]);
         return;
     }

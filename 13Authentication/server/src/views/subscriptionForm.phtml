@@ -4,7 +4,14 @@
     </div>
 </div>
 
+
+
 <form class="m-5" action="/learn-php/13Authentication/server/register" method="POST">
+    <?php if ($params["info"] === "registrationSuccesfull") : ?>
+        <div class="alert alert-success" role="alert">
+            Registration succesfull!
+        </div>
+    <?php endif ?>
     <label class="w-100">
         <input class="form-control" type="email" name="email" />
     </label>
@@ -15,6 +22,12 @@
 </form>
 
 <form action="/learn-php/13Authentication/server/login" method="POST">
+
+    <?php if ($params["info"] === "invalidCredentials") : ?>
+        <div class="alert alert-danger" role="alert">
+            Invalid user name or password!
+        </div>
+    <?php endif ?>
     <label class="w-100">
         <input class="form-control" type="email" name="email" />
     </label>
