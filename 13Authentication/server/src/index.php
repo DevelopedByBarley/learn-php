@@ -103,7 +103,7 @@ function logoutHandler()
 
 
 /**
-  function isLoggedIn()
+  function ic
    {
     if (!$_COOKIE[session_name()]) { // A SESSION NAME SEGÍTSÉGÉVEL MINDIG DINAMIKUSAN A MEGFELELEŐ NÉV KERÜL A KEZEDBE HA ESETLEG A SESSIONT EGYEDI NÉVEN INDÍTANÁD!
         // Kideritjük hogy szerver oldalon ez egy ténylegesen létező munkamenet vagy sem;
