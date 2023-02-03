@@ -6,14 +6,17 @@
                 <h3>District:</h3>
                 <h6><?= $city["district"] ?></h6>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item trigger bg-success">
                 <h3>Population:</h3>
                 <h6><?= $city["population"] ?></h6>
             </li>
             <li class="list-group-item">
-                <h3>District:</h3>
+                <h3 onclick="runTheScript()" style="cursor: pointer;">District:</h3>
                 <h6 class="<?php echo $city["isCapital"] ? "text-danger" : "text-success" ?>"><?= $city["isCapital"] ?></h6>
             </li>
         </ul>
     <?php endforeach ?>
 </div>
+
+
+<script src="./public/js/testScript.js"></script>

@@ -10,7 +10,7 @@ $path = $parsed['path'];
 // Útvonalak regisztrálása
 $routes = [
     // [method, útvonal, handlerFunction],
-    ['GET', '/learn-php/14.Restaurant_Website/server/', 'homeHandler'],
+    ['GET', '/learn-php/14.Restaurant_Website/server/src/', 'homeHandler'],
     ['GET', '/learn-php/14.Restaurant_Website/server/admin/etel-szerkesztese/{keresoBaratNev}', 'dishEditHandler'],
 ];
 

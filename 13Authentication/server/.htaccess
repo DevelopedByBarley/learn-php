@@ -1,5 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+
   
   # Környezeti változók beállítása
   SetEnv DB_HOST localhost
